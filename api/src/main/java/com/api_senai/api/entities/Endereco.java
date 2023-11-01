@@ -1,6 +1,6 @@
 package com.api_senai.api.entities;
 
-import java.io.IOException;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -11,43 +11,63 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
-//import org.apache.http.client.methods.HttpGet;
 @Data
+@Entity
+@Table(name = "enderecos")
 public class Endereco {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String cep;
     private String logradouro;
+    private String numero;
     private String complemento;
     private String bairro;
-    private String localidade;
+    private String localidade; //cidade
     private String uf;
+    
+    @OneToMany(mappedBy = "endereco")
+    private List<Cliente> clientes;
+
+    @OneToOne(mappedBy = "endereco")
+    private Cliente funcionario;
 
     public static Endereco getEnderecoByCep(String cep){
-        Endereco local = new Endereco();
-        /* mandar o cep pro via cep
-        tratar a resposta
-        montar o endereço
-         */
-        HttpGet request = new HttpGet("http://viacep.com.br/ws/"+ cep + "/json/");
+        Endereco endereco = new Endereco();
 
+        //Mandar o cep para o viaCep
+        HttpGet request = new HttpGet("https://viacep.com.br/ws/"+ cep +"/json/");
 
-        try(CloseableHttpClient https = HttpClientBuilder.create().build();
-            CloseableHttpResponse resposta = https.execute(request))
-            {
-                HttpEntity entidade = resposta.getEntity();
-                String resultado = EntityUtils.toString(entidade);
-                System.out.println(resultado);
+        try(
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+            CloseableHttpResponse response = httpClient.execute(request);
+        ) {
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity);
+            System.out.println(result);
 
-                Gson gsonado = new Gson();
-                local = gsonado.fromJson(resultado, Endereco.class);
-                local.setComplemento(null);
-                System.out.println(local);
-            } catch (IOException abaa){
-            abaa.printStackTrace();
+            Gson gson = new Gson();
+            endereco = gson.fromJson(result, Endereco.class);
+            endereco.setComplemento(null);
+            System.out.println(endereco);
+
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
-        return local;
+        //Tratar a resposta do via cep
+
+        //montar o meu Endereco endereco
+
+        return endereco;
     }
 }

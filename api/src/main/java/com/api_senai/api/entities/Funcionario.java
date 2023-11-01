@@ -1,5 +1,6 @@
 package com.api_senai.api.entities;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -15,13 +16,15 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "clientes", 
-       uniqueConstraints = {
-           @UniqueConstraint(name = "email_ukey", columnNames = "email"),
-           @UniqueConstraint(name = "cpf_ukey", columnNames = "cpf"),
-           @UniqueConstraint(name = "telefone_ukey", columnNames = "telefone")
-       })
-public class Cliente extends Pessoa{
+@Table(name = "funcionarios",
+        uniqueConstraints = {
+            @UniqueConstraint(name = "email_ukey", columnNames = "email"),
+            @UniqueConstraint(name = "cpf_ukey", columnNames = "cpf"),
+            @UniqueConstraint(name = "telefone_ukey", columnNames = "telefone")
+        }
+)
+public class Funcionario extends Pessoa{
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +32,9 @@ public class Cliente extends Pessoa{
     private String login;
     private String senha;
     private boolean ativo;
+    private String ctps;
+    private String cargo;
+    private Double salario;
 
     @ManyToOne
     @JoinColumn(name = "endereco", foreignKey = @ForeignKey(name = "endereco_fkey"))
