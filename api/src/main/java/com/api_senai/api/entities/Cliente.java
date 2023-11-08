@@ -33,4 +33,23 @@ public class Cliente extends Pessoa{
     @ManyToOne
     @JoinColumn(name = "endereco", foreignKey = @ForeignKey(name = "endereco_fkey"))
     private Endereco endereco;
+
+    // public void setAllAtributos (Cliente novoCliente) {
+    //     this.setNome(novoCliente.getNome());
+    //     this.setCpf(novoCliente.getCpf());
+    //     this.setDataNascimento(novoCliente.getDataNascimento());
+    //     this.setTelefone(novoCliente.getTelefone());
+    //     this.setEmail(novoCliente.getEmail());
+    // }
+
+    public Cliente(Cliente novoCliente) {
+        this.setNome(novoCliente.getNome());
+        this.setCpf(novoCliente.getCpf());
+        this.setDataNascimento(novoCliente.getDataNascimento());
+        this.setTelefone(novoCliente.getTelefone());
+        this.setEmail(novoCliente.getEmail());
+    }
+
+    public Cliente() {
+    }
 }
